@@ -44,12 +44,36 @@ export type Weather = {
   cod: number;
 };
 
-export const getWeatherByLocation = async (latitude: number, longitude: number) => {
+type CoordinatesQuery = {
+  lat?: number;
+  lon?: number;
+};
+
+type InputQuery = {
+  q?: string;
+}
+
+type UnitsQuery = {
+  units?: "metric" | "imperial";
+}
+
+type GetWeatherByQuery = {
+  (query?: CoordinatesQuery & UnitsQuery): Promise<Weather | null>;
+  (query?: InputQuery & UnitsQuery): Promise<Weather | null>;
+};
+
+export const getWeatherByQuery: GetWeatherByQuery = async (query) => {
   try {
+    const queryString = Object.entries({
+      ...query,
+      appid: import.meta.env.VITE_WEATHER_API_KEY,
+    })
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+
     const weather = (await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${
-        import.meta.env.VITE_WEATHER_API_KEY
-      }&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?${queryString}`
     ).then((response) => response.json())) as Weather;
 
     return weather;
@@ -58,18 +82,3 @@ export const getWeatherByLocation = async (latitude: number, longitude: number) 
     return null;
   }
 };
-
-export const getWeatherByCity = async (city: string) => {
-    try {
-      const weather = (await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${
-          import.meta.env.VITE_WEATHER_API_KEY
-        }&units=metric`
-      ).then((response) => response.json())) as Weather;
-  
-      return weather;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
