@@ -1,5 +1,5 @@
 import React from "react";
-import { UNITS } from "../api/models";
+import { UNITS } from "@/api/models";
 
 type UnitsToggleProps = {
   units: UNITS;

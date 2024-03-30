@@ -1,13 +1,13 @@
 import React from "react";
-import { UNITS, Weather } from "../api/models";
-import { unitsSpeedText, unitsTemperatureText } from "../utils/temperature";
+import { UNITS, Weather } from "@/api/models";
+import { unitsSpeedText, unitsTemperatureText } from "@/utils/units-helpers";
 
 type WeatherTableProps = {
   weather: Weather;
   units: UNITS;
 };
 
-function WeatherTable({ weather, units }: WeatherTableProps) {
+export const WeatherTable = ({ weather, units }: WeatherTableProps) => {
   const weatherData = [
     ["Location", weather.name],
     ["Weather", weather.weather?.[0].description],
@@ -34,13 +34,11 @@ function WeatherTable({ weather, units }: WeatherTableProps) {
               >
                 {tableKey}
               </th>
-              <td className="px-6 py-4">{tableValue ?? 'N/A'}</td>
+              <td className="px-6 py-4">{tableValue ?? "N/A"}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-}
-
-export default WeatherTable;
+};

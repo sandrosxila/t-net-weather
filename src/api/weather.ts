@@ -1,5 +1,5 @@
 import { UNITS, Weather } from "./models";
-import { objectToQueryString } from "../utils/transformers";
+import { objectToQueryString } from "@/utils/transformers";
 
 export type CoordinatesQuery = {
   lat: number;

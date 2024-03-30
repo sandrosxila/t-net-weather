@@ -6,11 +6,11 @@ import {
   CoordinatesQuery,
   InputQuery,
   UnitsQuery,
-} from "./api/weather";
-import { UnitsToggle } from "./components/units-toggle";
-import { GeoLocation, UNITS, type Weather } from "./api/models";
-import WeatherDashboard from "./components/weather-dashboard";
-import { getCoordinates } from "./utils/geo-location";
+} from "@/api/weather";
+import { UnitsToggle } from "@/components/units-toggle";
+import { GeoLocation, UNITS, type Weather } from "@/api/models";
+import { WeatherDashboard } from "@/components/weather-dashboard";
+import { getCoordinates } from "@/utils/geo-location";
 
 function App() {
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
@@ -70,6 +70,7 @@ function App() {
 
   const onUnitsChange = (units: UNITS) => {
     setUnits(units);
+    
     if (weather) {
       handleQueryRequest({
         lat: weather!.coord.lat,

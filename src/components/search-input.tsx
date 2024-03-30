@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { getLocations } from "../api/location";
+import { getLocations } from "@/api/location";
 import { useState } from "react";
-import { GeoLocation } from "../api/models";
+import { GeoLocation } from "@/api/models";
 import throttle from "lodash.throttle";
+
+const THROTTLE_TIMEOUT = 500;
 
 type SearchInputProps = {
   onChange: (value: GeoLocation) => void;
@@ -17,7 +19,7 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
       (text: string) => {
         getLocations(text).then((locations) => setLocations(locations));
       },
-      500,
+      THROTTLE_TIMEOUT,
       { leading: false, trailing: true }
     )
   );
