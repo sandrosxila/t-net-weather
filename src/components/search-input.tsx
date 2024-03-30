@@ -32,18 +32,21 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
     };
   }, [ref]);
 
+  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    
+    startTransition(() => {
+      getLocations(text).then((locations) => setLocations(locations));
+    });
+  };
+
   return (
     <div className="flex flex-col gap-6 w-72">
       <div className="relative h-11 w-full min-w-[200px]" ref={ref}>
         <input
           placeholder="Enter Your City"
           className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans font-normal text-xl text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-          onChange={(e) => {
-            const text = e.target.value;
-            startTransition(() => {
-              getLocations(text).then((locations) => setLocations(locations));
-            });
-          }}
+          onChange={onTextChange}
         />
         {!!locations.length && (
           <div className="absolute top-full bg-white text-black w-full rounded-b-lg">
@@ -61,4 +64,4 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
       </div>
     </div>
   );
-}
+};

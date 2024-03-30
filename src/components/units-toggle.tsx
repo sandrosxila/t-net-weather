@@ -7,8 +7,10 @@ type UnitsToggleProps = {
 };
 
 export const UnitsToggle = ({ units, onChange }: UnitsToggleProps) => {
-  const onButtonClick = (unit: UNITS) => () => {
-    onChange(unit);
+  const onButtonClick = (newUnits: UNITS) => () => {
+    if (newUnits !== units) {
+      onChange(newUnits);
+    }
   };
 
   return (
@@ -39,4 +41,3 @@ export const UnitsToggle = ({ units, onChange }: UnitsToggleProps) => {
     </div>
   );
 };
-

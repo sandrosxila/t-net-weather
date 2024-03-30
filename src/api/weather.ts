@@ -1,12 +1,13 @@
 import { UNITS, Weather } from "./models";
+import { objectToQueryString } from "../utils/transformers";
 
 type CoordinatesQuery = {
-  lat?: number;
-  lon?: number;
+  lat: number;
+  lon: number;
 };
 
 type InputQuery = {
-  q?: string;
+  q: string;
 };
 
 type UnitsQuery = {
@@ -14,19 +15,16 @@ type UnitsQuery = {
 };
 
 type GetWeatherByQuery = {
-  (query?: CoordinatesQuery & UnitsQuery): Promise<Weather | null>;
-  (query?: InputQuery & UnitsQuery): Promise<Weather | null>;
+  (query: CoordinatesQuery & UnitsQuery): Promise<Weather | null>;
+  (query: InputQuery & UnitsQuery): Promise<Weather | null>;
 };
 
 export const getWeatherByQuery: GetWeatherByQuery = async (query) => {
   try {
-    const queryString = Object.entries({
+    const queryString = objectToQueryString({
       ...query,
       appid: import.meta.env.VITE_WEATHER_API_KEY,
-    })
-      .filter(([, value]) => value !== undefined)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
+    });
 
     const weather = (await fetch(
       `https://api.openweathermap.org/data/2.5/weather?${queryString}`
