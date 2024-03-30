@@ -1,16 +1,32 @@
 import React, { useEffect, useRef } from "react";
 import { getLocations } from "../api/location";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { GeoLocation } from "../api/models";
+import throttle from "lodash.throttle";
 
 type SearchInputProps = {
   onChange: (value: GeoLocation) => void;
 };
 
 export const SearchInput = ({ onChange }: SearchInputProps) => {
-  const [, startTransition] = useTransition();
   const [locations, setLocations] = useState<GeoLocation[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const throttledChange = useRef(
+    throttle(
+      (text: string) => {
+        getLocations(text).then((locations) => setLocations(locations));
+      },
+      500,
+      { leading: false, trailing: true }
+    )
+  );
+
+  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+
+    throttledChange.current(text);
+  };
 
   // returns event callback with capital
   const onSuggestionClick = (location: GeoLocation) => () => {
@@ -24,21 +40,12 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
         setLocations([]);
       }
     }
-    // Bind the event listener
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [ref]);
-
-  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const text = e.target.value;
-    
-    startTransition(() => {
-      getLocations(text).then((locations) => setLocations(locations));
-    });
-  };
 
   return (
     <div className="flex flex-col gap-6 w-72">

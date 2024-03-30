@@ -21,7 +21,7 @@ function WeatherTable({ weather, units }: WeatherTableProps) {
 
   return (
     <div className="grow overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <table className="w-full text-sm text-left rtl:text-right text-gray-400">
         <tbody>
           {weatherData.map(([tableKey, tableValue], index) => (
             <tr
@@ -30,7 +30,7 @@ function WeatherTable({ weather, units }: WeatherTableProps) {
             >
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"
+                className="px-6 py-4 font-medium whitespace-nowrap text-white bg-gray-800"
               >
                 {tableKey}
               </th>

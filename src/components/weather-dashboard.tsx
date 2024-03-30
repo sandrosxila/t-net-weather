@@ -18,13 +18,13 @@ export default function WeatherDashboard({
     <>
       {isWeatherLoading && <p>Loading weather data...</p>}
 
-      {!isWeatherLoading && weather && (
+      {!isWeatherLoading && !!weather && (
         <div className="flex w-full p-4 rounded-lg shadow bg-gray-800 border-gray-700 gap-6">
           <div className="flex align-middle justify-center">
             <img
               className="h-min"
-              src={URLS.weatherIcon(weather.weather?.[0].icon)}
-              alt={weather.weather?.[0].description}
+              src={URLS.weatherIcon(weather.weather[0].icon)}
+              alt={weather.weather[0].description}
             />
           </div>
 
