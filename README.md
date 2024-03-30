@@ -1,5 +1,7 @@
 # T-NET Weather App
 
+simple weather app based on [OpenWeather API](https://openweathermap.org/current).
+
 ## Requirements
 
 - node v20.12.0
