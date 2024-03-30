@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import SearchInput from "./components/search-input";
-import { getWeatherByQuery, Weather } from "./api/weather";
+import { SearchInput } from "./components/search-input";
+import { getWeatherByQuery } from "./api/weather";
+import { UnitsToggle } from "./components/units-toggle";
+import { UNITS, type Weather } from "./api/models";
+import { unitsTemperatureText } from "./utils/temperature";
 
 function App() {
-  const [location, setLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
 
   const [weather, setWeather] = useState<Weather | null>(null);
 
   const [error, setError] = useState<string | null>(null);
 
+  const [units, setUnits] = useState<UNITS>(UNITS.METRIC);
+
   const getGeolocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(getWeatherFromPosition, () => {
-        setError("Unable to retrieve your location: Please allow location permission");
+        setError(
+          "Unable to retrieve your location: Please allow location permission"
+        );
       });
     } else {
       setError("Geolocation not supported");
@@ -27,37 +31,30 @@ function App() {
     getGeolocation();
   };
 
-  const setWeatherRequestData = (weatherData: Weather | null) => {
-    setWeather(weatherData);
-
-    if (weatherData) {
-      setLocation({
-        latitude: weatherData.coord.lat,
-        longitude: weatherData.coord.lon,
-      });
-    }
-  };
-
   const getWeatherFromPosition = async (position: GeolocationPosition) => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
+    setIsWeatherLoading(true);
     const weatherData = await getWeatherByQuery({
       lat: latitude,
       lon: longitude,
-      units: "metric",
+      units,
     });
 
-    setWeatherRequestData(weatherData);
+    setWeather(weatherData);
+    setIsWeatherLoading(false);
   };
 
   const getWeatherFromCityName = async (cityName: string) => {
+    setIsWeatherLoading(true);
     const weatherData = await getWeatherByQuery({
       q: cityName,
-      units: "metric",
+      units,
     });
 
-    setWeatherRequestData(weatherData);
+    setWeather(weatherData);
+    setIsWeatherLoading(false);
   };
 
   useEffect(() => {
@@ -68,8 +65,9 @@ function App() {
   return (
     <>
       <div>
-        {!location && (
+        {!isWeatherLoading && !weather && (
           <div className="flex flex-col gap-6">
+            <UnitsToggle units={units} onChange={setUnits} />
             <div className="flex gap-4">
               <SearchInput
                 onChange={(value) => getWeatherFromCityName(value.name)}
@@ -87,9 +85,9 @@ function App() {
           </div>
         )}
 
-        {location && !weather ? <p>Loading weather data...</p> : null}
+        {isWeatherLoading && !weather && <p>Loading weather data...</p>}
 
-        {weather ? (
+        {weather && (
           <div className="flex w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700">
             <div className="flex align-middle justify-center">
               <img
@@ -103,11 +101,13 @@ function App() {
             </div>
             <div className="flex flex-col justify-center items-start">
               <p>Location: {weather.name}</p>
-              <p>Temperature: {weather.main.temp} °C</p>
+              <p>
+                Temperature: {weather.main.temp} {unitsTemperatureText[units]}
+              </p>
               <p>Weather: {weather.weather[0].description}</p>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </>
   );

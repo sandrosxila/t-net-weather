@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { getLocations, GeoLocation } from "../api/location";
+import { getLocations } from "../api/location";
 import { useState, useTransition } from "react";
+import { GeoLocation } from "../api/models";
 
 type SearchInputProps = {
   onChange: (value: GeoLocation) => void;
 };
 
-export default function SearchInput({ onChange }: SearchInputProps) {
+export const SearchInput = ({ onChange }: SearchInputProps) => {
   const [, startTransition] = useTransition();
   const [locations, setLocations] = useState<GeoLocation[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);

@@ -1,10 +1,4 @@
-export type GeoLocation = {
-  country: string;
-  lat: number;
-  lon: number;
-  name: string;
-  state: string;
-};
+import { GeoLocation } from "./models";
 
 const LIMIT = 5;
 
