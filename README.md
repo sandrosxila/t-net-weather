@@ -7,6 +7,12 @@
 
 ## Set Up
 
+use `lts/iron` with `nvm`:
+
+```bash
+nvm use 20
+```
+
 install dependencies:
 
 ```bash
