@@ -8,7 +8,7 @@ import {
   UnitsQuery,
 } from "@/api/weather";
 import { UnitsToggle } from "@/components/units-toggle";
-import { GeoLocation, UNITS, type Weather } from "@/api/models";
+import { UNITS, type Weather } from "@/api/models";
 import { WeatherDashboard } from "@/components/weather-dashboard";
 import { getCoordinates } from "@/utils/geo-location";
 
@@ -36,6 +36,7 @@ function App() {
 
   const handleQueryRequest: HandleRequestByQuery = (query) => {
     setIsWeatherLoading(true);
+    setWeather(null);
     getWeatherByQuery(query as Parameters<typeof getWeatherByQuery>[0])
       .then((weather) => {
         setError(null);
@@ -59,9 +60,7 @@ function App() {
     }
   };
 
-  const onSearchInputChange = (location: GeoLocation) => {
-    const cityName = location.name;
-
+  const onSearchInputChange = (cityName: string) => {
     handleQueryRequest({
       q: cityName,
       units,

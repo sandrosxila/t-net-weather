@@ -37,7 +37,7 @@ it("should render weather table", async () => {
     ["Temperature", "15.45 °C"],
     ["Feels Like", "14.38 °C"],
     ["Humidity", "51%"],
-    ["Sea Level", "20"],
+    ["Sea Level", "20 m"],
     ["Wind Speed", "13.89 m/s"],
     ["Visibility", "10.00 km"],
   ];

@@ -7,7 +7,7 @@ import throttle from "lodash.throttle";
 const THROTTLE_TIMEOUT = 500;
 
 type SearchInputProps = {
-  onChange: (value: GeoLocation) => void;
+  onChange: (cityName: string) => void;
 };
 
 export const SearchInput = ({ onChange }: SearchInputProps) => {
@@ -20,7 +20,7 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
         getLocations(text).then((locations) => setLocations(locations));
       },
       THROTTLE_TIMEOUT,
-      { leading: false, trailing: true }
+      { leading: true, trailing: false }
     )
   );
 
@@ -32,8 +32,16 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
 
   // returns event callback with capital
   const onSuggestionClick = (location: GeoLocation) => () => {
-    onChange(location);
+    onChange(location.name);
     setLocations([]);
+  };
+
+  const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const text = (e.target as HTMLInputElement).value;
+      onChange(text);
+      setLocations([]);
+    }
   };
 
   useEffect(() => {
@@ -56,13 +64,14 @@ export const SearchInput = ({ onChange }: SearchInputProps) => {
           placeholder="Enter Your City"
           className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans font-normal text-xl text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-white focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
           onChange={onTextChange}
+          onKeyDown={onInputKeyDown}
         />
         {!!locations.length && (
-          <div className="absolute top-full bg-white text-black w-full rounded-b-lg">
+          <div className="absolute top-full bg-white  text-black w-full rounded-b-lg overflow-hidden">
             {locations.map((location, index) => (
               <button
                 onClick={onSuggestionClick(location)}
-                className="w-full p-4 flex cursor-pointer"
+                className="w-full p-4 flex hover:bg-gray-100"
                 key={index}
               >
                 {location.name}

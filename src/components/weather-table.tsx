@@ -14,7 +14,10 @@ export const WeatherTable = ({ weather, units }: WeatherTableProps) => {
     ["Temperature", `${weather.main.temp} ${unitsTemperatureText[units]}`],
     ["Feels Like", `${weather.main.feels_like} ${unitsTemperatureText[units]}`],
     ["Humidity", `${weather.main.humidity}%`],
-    ["Sea Level", weather.main.sea_level],
+    [
+      "Sea Level",
+      weather.main.sea_level ? `${weather.main.sea_level} m` : "N/A",
+    ],
     ["Wind Speed", `${weather.wind.speed} ${unitsSpeedText[units]}`],
     ["Visibility", `${Number(weather.visibility / 1000).toFixed(2)} km`],
   ];
@@ -34,7 +37,7 @@ export const WeatherTable = ({ weather, units }: WeatherTableProps) => {
               >
                 {tableKey}
               </th>
-              <td className="px-6 py-4">{tableValue ?? "N/A"}</td>
+              <td className="px-6 py-4">{tableValue}</td>
             </tr>
           ))}
         </tbody>
