@@ -26,3 +26,9 @@ run locally
 ```bash
 yarn dev
 ```
+
+run unit tests
+
+```bash
+yarn test
+```
